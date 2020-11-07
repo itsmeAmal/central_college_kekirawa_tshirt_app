@@ -6,7 +6,6 @@
 package kcc.tshirt.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,88 +63,5 @@ public class commonDaoImpl implements commonDao {
         }
         ResultSet rst = ps.executeQuery();
         return rst;
-    }
-
-    public boolean isNotAvailableTime() throws SQLException {
-        boolean status = false;
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("select * from delivery_plan_details "
-                + "where delivery_plan_details_start_time "
-                + "between delivery_plan_details_start_time "
-                + "and delivery_plan_details_end_time");
-        ResultSet rset = ps.executeQuery();
-        if (rset.next()) {
-            status = true;
-        }
-        return status;
-    }
-
-    public int GetLectureCountByDateAndCoduleCode(Date Date, String ModeuleCode) throws SQLException {
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("select count(delivery_plan_details_module_code) as lecture_count "
-                + "from delivery_plan_details where delivery_plan_details_module_code=? and delivery_plan_details_date>=? "
-                + "and delivery_plan_details_type='Lecture'");
-        ps.setString(1, ModeuleCode);
-        ps.setDate(2, Date);
-        int count = 0;
-        ResultSet rset = ps.executeQuery();
-        while (rset.next()) {
-            count = rset.getInt("lecture_count");
-        }
-        return count;
-    }
-
-    public int GetTutorialCountByDateAndCoduleCode(Date Date, String ModeuleCode) throws SQLException {
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("select count(delivery_plan_details_module_code) as lecture_count "
-                + "from delivery_plan_details where delivery_plan_details_module_code=? and delivery_plan_details_date>=? "
-                + "and delivery_plan_details_type='Tutorial'");
-        ps.setString(1, ModeuleCode);
-        ps.setDate(2, Date);
-        int count = 0;
-        ResultSet rset = ps.executeQuery();
-        while (rset.next()) {
-            count = rset.getInt("lecture_count");
-        }
-        return count;
-    }
-
-    public int GetLabCountByDateAndCoduleCode(Date Date, String ModeuleCode) throws SQLException {
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("select count(delivery_plan_details_module_code) as lecture_count "
-                + "from delivery_plan_details where delivery_plan_details_module_code=? and delivery_plan_details_date>=? "
-                + "and delivery_plan_details_type='Lab'");
-        ps.setString(1, ModeuleCode);
-        ps.setDate(2, Date);
-        int count = 0;
-        ResultSet rset = ps.executeQuery();
-        while (rset.next()) {
-            count = rset.getInt("lecture_count");
-        }
-        return count;
-    }
-
-    public int getLoopCountByCourseIdAndGroupDetailLevel(int GroupType, String Level) throws SQLException {
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("select loop_count from group_count where group_type=? and group_detail=?");
-        ps.setInt(1, GroupType);
-        ps.setString(2, Level);
-        ResultSet rset = ps.executeQuery();
-        int LoopCount = 0;
-        while (rset.next()) {
-            LoopCount = rset.getInt("loop_count");
-        }
-        return LoopCount;
-    }
-
-    public ResultSet getAllGroupNamesByCourseIdAndGroupDetailLevel(int GroupType, String Level) throws SQLException {
-        Connection con = DatabaseConnection.getDatabaseConnection();
-        PreparedStatement ps = con.prepareStatement("SELECT group_id, group_name, group_batch_id, group_type as group_course_id, "
-                + " group_detail, subject_name, subject_id, group_status, course_name, course_type as subject_short_name "
-                + " FROM group_info left join course on group_type=course_id left join subject_details on course_id=subject_course_id "
-                + " where group_type=? and group_detail=?");
-        ps.setInt(1, GroupType);
-        ps.setString(2, Level);
-        return ps.executeQuery();
     }
 }
